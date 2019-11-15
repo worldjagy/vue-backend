@@ -2,7 +2,7 @@ import Cookies from 'js-cookie'
 
 const state = {
     // 用户名
-    name: ''
+    name: '',
 }
 
 const mutations = {

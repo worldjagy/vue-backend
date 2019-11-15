@@ -52,7 +52,7 @@
             color: $leftNavColor;
             &.is-active{
                 background-color: $--menu-item-hover-fill;
-                color: $--menu-item-color;
+                color: #eee;//$--menu-item-color;
             }
         }
         box-sizing: border-box;

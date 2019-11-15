@@ -6,8 +6,8 @@
             </div>
             <div class="form-group">
                 <el-form :model="loginForm" :rules="loginRules" ref="loginForm" label-position="left" label-width="0px">
-                    <el-form-item prop="name">
-                        <el-input v-model="loginForm.name" type="text" :placeholder="$t('global.username')"></el-input>
+                    <el-form-item prop="username">
+                        <el-input v-model="loginForm.username" type="text" :placeholder="$t('global.username')"></el-input>
                     </el-form-item>
                     <el-form-item prop="password">
                         <el-input v-model="loginForm.password" type="password" :placeholder="$t('global.password')"></el-input>
@@ -44,12 +44,12 @@ export default {
     data() {
         return {
             loginForm: {
-                name: '',
+                username: '',
                 password: '',
                 captcha: ''
             },
             loginRules: {
-                name: [
+                username: [
                     {required: true, message: '', trigger: 'blur'}
                 ],
                 password :[
@@ -84,21 +84,24 @@ export default {
     methods: {
         ...mapActions({
             login: 'auth/loginByEmail',
+            info: 'auth/getInfo',
             loadLang: 'loadLang'
         }),
         submitForm(){
             this.$refs.loginForm.validate((valid) => {
                 if (valid) {
                     this.login({
-                        name: this.loginForm.name,
-                        password: this.loginForm.password
+                        username: this.loginForm.username,
+                        password: this.loginForm.password,
+                        grantType: 'password'
                     }).then(res => {
-                        if(res.login){
+                        if(res.code==0){
+                            this.info();
                             this.$router.push('home')
                         } else {
                             this.sysMsg = res.message
-                            this.captcha.show = true
-                            this.captcha.src = res.captcha
+                            // this.captcha.show = true
+                            // this.captcha.src = res.captcha
                         }
                     })
                 } else {
@@ -120,7 +123,7 @@ export default {
             this.$store.commit("setThemeColor", val)
         },
         setErrMsg(){
-            this.loginRules.name[0].message = this.$t('global.errMsg.inputRequired', {cont: this.$t('global.username')})
+            this.loginRules.username[0].message = this.$t('global.errMsg.inputRequired', {cont: this.$t('global.username')})
             this.loginRules.password[0].message = this.$t('global.errMsg.inputRequired', {cont: this.$t('global.password')})
             this.loginRules.captcha[0].message = this.$t('global.errMsg.inputRequired', {cont: this.$t('global.captcha')})
         }

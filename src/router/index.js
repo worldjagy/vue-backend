@@ -77,6 +77,7 @@ router.beforeEach((to, from, next) => {
                     next()
                 }
             })
+            next()
         }
     } else {
         // 如果是免登陆的页面则直接进入，否则跳转到登录页面

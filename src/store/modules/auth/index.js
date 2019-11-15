@@ -20,7 +20,7 @@ const mutations = {
             Auth.removeToken()
             Auth.removeLoginStatus()
         }
-        state.token = data
+        state.token = 'Bearer '+data;
     }
 }
 
@@ -29,15 +29,29 @@ const actions = {
     loginByEmail({ commit }, userInfo) {
         return new Promise((resolve) => {
             axios({
-                url: '/login',
+                url: '/uaa/login',
                 method: 'post',
                 data: {
                     ...userInfo
                 }
             }).then(res => {
-                if(res.login){
-                    commit('setToken', res.token)
-                    commit('user/setName', res.name, { root: true })
+                if(res.code==0){
+                    commit('setToken', res.data)
+                }
+                resolve(res)
+            })
+        });
+    },
+
+    //获取用户信息
+    getInfo({commit}) {
+        return new Promise((resolve) => {
+            axios({
+                url: '/uaa/info',
+                method: 'get'
+            }).then(res => {
+                if(res.code==0){
+                    commit('user/setName', res.data.userName, { root: true })
                 }
                 resolve(res)
             })
